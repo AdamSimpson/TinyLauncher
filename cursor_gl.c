@@ -65,8 +65,12 @@ void create_cursor_buffers(cursor_t *state)
     glGenBuffers(1, &state->ebo);
 }
 
-void set_cursor_vertices(cursor_t *state, int center_x, int center_y)
+void set_cursor_position(cursor_t *state, int center_x, int center_y)
 {
+    // Set cursor center
+    state->center_x = center_x;
+    state->center_y = center_y;
+
     // Vertices: Pos(x,y) Tex(x,y)
     // For simplicity only single vbo is generated and offset used as needed
 
@@ -173,7 +177,7 @@ void init_cursor(cursor_t *state, gl_t *gl_state, char *file_name, int cursor_wi
     create_cursor_texture(state);
 
     // Set verticies
-    set_cursor_vertices(state, 0.0, 0.0);
+    set_cursor_position(state, 0.0, 0.0);
 }
 
 void draw_cursor(cursor_t *state)

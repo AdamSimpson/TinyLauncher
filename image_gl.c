@@ -252,8 +252,8 @@ void draw_image(image_t *state)
 // test if x,y pixel position is inside of image
 bool inside_image(image_t *state, int x, int y)
 {
-    if(x > state->lower_left_x && x < state->lower_left_x + state->image_width){
-        if(y > state->lower_left_y && y < state->lower_left_y + state->image_height) {
+    if(x > state->lower_left_x && x < (state->lower_left_x + state->image_width) ){
+        if(y > state->lower_left_y && y < (state->lower_left_y + state->image_height) ) {
             return true;
         }
     }

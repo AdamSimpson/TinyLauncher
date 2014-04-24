@@ -25,6 +25,8 @@ THE SOFTWARE.
 #ifndef EGL_UTILS_H
 #define EGL_UTILS_H
 
+typedef struct GL_T gl_t;
+
 #include "GLES2/gl2.h"
 #include "EGL/egl.h"
 #include "EGL/eglext.h"
@@ -35,9 +37,7 @@ THE SOFTWARE.
 #include "stdbool.h"
 #include "bcm_host.h"
 
-#include "launcher.h"
-
-typedef struct gl_t {
+struct GL_T {
     uint32_t screen_width;
     uint32_t screen_height;
 
@@ -51,15 +51,9 @@ typedef struct gl_t {
     void *user_pointer; // mimics GLFW user pointer
 
     bool window_should_close;
-} gl_t;
+};
 
-typedef struct {
-    char button;
-    char dx;
-    char dy;
-} MOUSE_INPUT;
-
-void init_ogl(gl_t *state, launcher_t *launcher_state);
+void init_ogl(gl_t *state, void *launcher_state);
 void process_controller_events(gl_t *state, int controller_fd);
 void exit_ogl(gl_t *state);
 void swap_ogl(gl_t *state);

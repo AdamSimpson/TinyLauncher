@@ -67,7 +67,7 @@ bool window_should_close(gl_t *state)
 }
 
 // Description: Sets the display, OpenGL|ES context and screen stuff
-void init_ogl(gl_t *state, launcher_t *launcher_state)
+void init_ogl(gl_t *state, void *launcher_state)
 {
     bcm_host_init();
 
@@ -227,7 +227,7 @@ void handle_mouse(gl_t *state, struct input_event *event)
     switch(event->code)
     {
         case REL_X:
-            x += 3*event->value;
+            x += 2*event->value;
             // Make sure not to go out of bounds
             if(x < 0.0f)
                 x = 0.0f;
@@ -236,7 +236,7 @@ void handle_mouse(gl_t *state, struct input_event *event)
             update_cursor(launcher_state, x, y);
             break;
         case REL_Y:
-            y -= 3*event->value;
+            y += 2*event->value;
             if(y < 0.0f)
                 y = 0.0f;
             else if(y > state->screen_height)

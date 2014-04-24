@@ -53,6 +53,7 @@ typedef struct cursor_t {
     int center_x;
     int center_y;
 
+    // Pixel dimensions of cursor image
     int cursor_width;
     int cursor_height;
 } cursor_t;
@@ -60,7 +61,7 @@ typedef struct cursor_t {
 void init_cursor(cursor_t *state, gl_t *gl_state, char *file_name, int cursor_width, int cursor_height);
 void create_cursor_program(cursor_t *state);
 void create_cursor_buffers(cursor_t *state);
-void set_cursor_vertices(cursor_t *state, int center_x, int center_y);
+void set_cursor_position(cursor_t *state, int center_x, int center_y);
 void create_cursor_texture(cursor_t *state);
 void draw_cursor(cursor_t *state);
 
