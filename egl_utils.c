@@ -56,6 +56,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "egl_utils.h"
 #include "linux/input.h"
 
+#include "launcher.h"
+
 bool window_should_close(gl_t *state)
 {
     if(state->window_should_close)
@@ -65,7 +67,7 @@ bool window_should_close(gl_t *state)
 }
 
 // Description: Sets the display, OpenGL|ES context and screen stuff
-void init_ogl(gl_t *state)
+void init_ogl(gl_t *state, launcher_t *launcher_state)
 {
     bcm_host_init();
 
@@ -76,7 +78,7 @@ void init_ogl(gl_t *state)
     state->window_should_close = false;
 
     // Set a user pointer up
-//    state->user_pointer = render_state;
+    state->user_pointer = launcher_state;
 
     int32_t success = 0;
     EGLBoolean result;
@@ -192,8 +194,8 @@ void exit_ogl(gl_t *state)
 // Handle key press
 void handle_key(gl_t *state, struct input_event *event)
 {
-    // Get render_state from gl_state
-//    render_t *render_state = (render_t*)state->user_pointer;
+    // Get launcher_state from gl_state
+    launcher_t *launcher_state = (launcher_t*)state->user_pointer;
 
     // Recognize single key press events
     if(event->value == 1 && event->code > 0)
@@ -209,14 +211,12 @@ void handle_key(gl_t *state, struct input_event *event)
 // Handle mouse movement
 void handle_mouse(gl_t *state, struct input_event *event)
 {
-    // Get render_state from gl_state
-//    render_t *render_state = (render_t*)state->user_pointer;
+    // Get launcher_state from gl_state
+    launcher_t *launcher_state = (launcher_t*)state->user_pointer;
 
     // Initialize mouse position
     static int x = 1920/2;
     static int y = 1080/2;
-
-    float ogl_x, ogl_y;
 
     // Handle mouse movement
     switch(event->code)
@@ -228,9 +228,7 @@ void handle_mouse(gl_t *state, struct input_event *event)
                 x = 0.0f;
             else if(x > state->screen_width)
                 x = state->screen_width;
-            // convert to OpenGL screen coordinates from pixels
-            ogl_x = (float)x/(0.5f*state->screen_width) - 1.0f;
-            ogl_y = (float)y/(0.5f*state->screen_height) - 1.0f;
+            update_cursor(launcher_state, x, y);
             break;
         case REL_Y:
             y += event->value;
@@ -238,9 +236,7 @@ void handle_mouse(gl_t *state, struct input_event *event)
                 y = 0.0f;
             else if(y > state->screen_height)
                 y = state->screen_height;
-            // convert to OpenGL screen coordinates from pixels
-            ogl_x = (float)x/(0.5f*state->screen_width) - 1.0f;
-            ogl_y = (float)y/(0.5f*state->screen_height) - 1.0f;
+            update_cursor(launcher_state, x, y);
             break;
         case REL_WHEEL:
             if(event->value > 0.0f)

@@ -1,15 +1,22 @@
 #include <stdio.h>
 #include "egl_utils.h"
+#include "launcher.h"
 #include "image_gl.h"
 #include "cursor_gl.h"
 
 int main(int argc, char *argv[])
 {
 
+    // Create state for launcher program
+    launcher_t state;
+    // Set cursor to around center of screen initially
+    state.cursor_x = 1920/2.0;
+    state.cursor_y = 1080/2.0;
+
     // Setup initial OpenGL state
     gl_t gl_state;
     memset(&gl_state, 0, sizeof(gl_t));
-    init_ogl(&gl_state);
+    init_ogl(&gl_state, &state);
 
     // Initialize program launcher images OpenGL state
     int image_width = 600;
@@ -36,6 +43,9 @@ int main(int argc, char *argv[])
         // Update user input
         check_user_input(&gl_state);
 
+        // Update center of cursor
+        set_cursor_vertices(&cursor_state, state.cursor_x, state.cursor_y);
+
         // Clear background
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -55,3 +65,11 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+void update_cursor(launcher_t *state, int x, int y)
+{
+    // Update launcher state
+    state->cursor_x = x;
+    state->cursor_y = y;
+}
+

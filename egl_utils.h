@@ -35,6 +35,7 @@ THE SOFTWARE.
 #include "stdbool.h"
 #include "bcm_host.h"
 
+#include "launcher.h"
 
 typedef struct gl_t {
     uint32_t screen_width;
@@ -58,7 +59,7 @@ typedef struct {
     char dy;
 } MOUSE_INPUT;
 
-void init_ogl(gl_t *state);
+void init_ogl(gl_t *state, launcher_t *launcher_state);
 void process_controller_events(gl_t *state, int controller_fd);
 void exit_ogl(gl_t *state);
 void swap_ogl(gl_t *state);
