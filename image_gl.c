@@ -33,11 +33,11 @@ void create_image_program(image_t *state)
 {
     // Compile vertex shader
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    compile_shader(vertex_shader, "SPH/shaders/image_es.vert");
+    compile_shader(vertex_shader, "TinyLauncher/shaders/image_es.vert");
 
     // Compile fragment shader
     GLuint frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    compile_shader(frag_shader, "SPH/shaders/image_es.frag");
+    compile_shader(frag_shader, "TinyLauncher/shaders/image_es.frag");
 
     // Create shader program
     state->program = glCreateProgram();
@@ -71,11 +71,14 @@ void create_image_vertices(image_t *state)
     // For simplicity only single vbo is generated and offset used as needed
 
     // image dimensions in gl screen coordinates
-    float image_width = state->image_width;
-    float image_height =  state->image_height;
+    float image_width = 2.0*(state->image_width/(float)state->gl_state->screen_width);
+    float image_height =  2.0*(state->image_height/(float)state->gl_state->screen_height);
 
-    float lower_left_x = state->lower_left_x;
-    float lower_left_y = state->lower_left_y;
+    float gl_x, gl_y;
+    pixel_to_gl(state->gl_state, state->lower_left_x, state->lower_left_y, &gl_x, &gl_y);
+
+    float lower_left_x = gl_x;
+    float lower_left_y = gl_y;
     float lower_right_x = lower_left_x + image_width;
     float lower_right_y = lower_left_y;
     float upper_right_x = lower_right_x;
@@ -115,11 +118,10 @@ void create_image_texture(image_t *state)
     unsigned char* image;
     unsigned width, height;
 
-    error = lodepng_decode32_file(&image, &width, &height, "SPH/OakRidgeLeaf.png");
+    error = lodepng_decode32_file(&image, &width, &height, state->file_name);
     if(error) printf("error %u: %s\n", error, lodepng_error_text(error));
 
-    state->image_width = width;
-    state->image_height = height;
+    printf("loaded image: %dx%d\n", width, height);
 
     // Generate texture
     glGenTextures(1, &state->tex_uniform);
@@ -142,14 +144,19 @@ void create_image_texture(image_t *state)
 
     // Release image host memory
     free(image);
+
+    // Unbind texture
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 
-void init_image(image_t *state, int screen_width, int screen_height, int lower_left_x, int lower_left_y, int image_width, int image_height)
+void init_image(image_t *state, gl_t *gl_state, char *file_name, int lower_left_x, int lower_left_y, int image_width, int image_height)
 {
-    // Set screen with/height in pixels
-    state->screen_width = screen_width;
-    state->screen_height = screen_height;
+    // Set GL state
+    state->gl_state = gl_state;
+
+    // Set filename
+    strcpy(state->file_name, file_name);
 
     // Set lower left image pixel position
     state->lower_left_x = lower_left_x;
@@ -188,7 +195,7 @@ void draw_image(image_t *state)
     glEnableVertexAttribArray(state->tex_coord_location);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, state->ebo);
 
-    // Disable Blend
+    // Enable Blend
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -199,6 +206,10 @@ void draw_image(image_t *state)
 
     // Draw image
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, 0);
+
+    // Unbind texture
+    glBindTexture(GL_TEXTURE_2D, 0);
+
 }
 
 // test if x,y pixel position is inside of image

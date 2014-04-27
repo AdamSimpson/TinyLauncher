@@ -29,7 +29,12 @@ THE SOFTWARE.
 #include "stdbool.h"
 
 typedef struct image_t {
+    gl_t *gl_state;
+
     GLuint program;
+
+    // Image file name
+    char file_name[30];
 
     // Program locations
     GLint position_location;
@@ -45,10 +50,6 @@ typedef struct image_t {
     // Element buffer
     GLuint ebo;
 
-    // Pixel dimensions
-    int screen_width;
-    int screen_height;
-
     // Position of lower left corner of image
     int lower_left_x;
     int lower_left_y;
@@ -57,7 +58,7 @@ typedef struct image_t {
     int image_height;
 } image_t;
 
-void init_image(image_t *state, int screen_width, int screen_height, int lower_left_x, int lower_left_y, int image_width, int image_height);
+void init_image(image_t *state, gl_t *gl_state, char *file_name, int lower_left_x, int lower_left_y, int image_width, int image_height);
 void create_image_program(image_t *state);
 void create_image_buffers(image_t *state);
 void create_image_vertices(image_t *state);

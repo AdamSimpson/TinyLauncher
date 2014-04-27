@@ -200,49 +200,9 @@ void handle_key(gl_t *state, struct input_event *event)
     {
         switch(event->code)
         {
-/*            case KEY_RIGHT:
-                increase_parameter(render_state);
+            default:
                 break;
-            case KEY_LEFT:
-                decrease_parameter(render_state);
-                break;
-            case KEY_UP:
-                move_parameter_up(render_state);
-                break;
-            case KEY_DOWN:
-                move_parameter_down(render_state);
-                break;
-            case KEY_PAGEUP:
-                add_partition(render_state);
-                break;
-            case KEY_PAGEDOWN:
-                remove_partition(render_state);
-                break;
-            case KEY_X:
-                set_fluid_x(render_state);
-                break;
-            case KEY_Y:
-                set_fluid_y(render_state);
-                break;
-            case KEY_A:
-                set_fluid_a(render_state);
-                break;
-            case KEY_B:
-                set_fluid_b(render_state);
-                break;
-            case BTN_BACK:
-                toggle_dividers(render_state);
-                break;
-            case BTN_FORWARD:
-                toggle_dividers(render_state);
-                break;
-            case KEY_ESC:
-                toggle_pause(render_state);
-                break;
-            case KEY_TAB:
-                state->window_should_close = true;
-                break;
-*/        }
+        }
     }
 }
 
@@ -330,6 +290,16 @@ void process_controller_events(gl_t *state, int controller_fd)
             }
         }
     }
+}
+
+// Convert pixel coordinates, lower left origin, to gl coordinates, center origin
+void pixel_to_gl(gl_t *state, int pixel_x, int pixel_y, float *gl_x, float *gl_y)
+{
+    float half_x = state->screen_width/2.0;
+    float half_y = state->screen_height/2.0;
+    *gl_x = pixel_x/half_x - 1.0;
+    *gl_y = pixel_y/half_y - 1.0;
+
 }
 
 // Poll /dev/input for any input event
