@@ -222,7 +222,7 @@ void handle_mouse(gl_t *state, struct input_event *event)
     switch(event->code)
     {
         case REL_X:
-            x += event->value;
+            x += 3*event->value;
             // Make sure not to go out of bounds
             if(x < 0.0f)
                 x = 0.0f;
@@ -231,7 +231,7 @@ void handle_mouse(gl_t *state, struct input_event *event)
             update_cursor(launcher_state, x, y);
             break;
         case REL_Y:
-            y += event->value;
+            y -= 3*event->value;
             if(y < 0.0f)
                 y = 0.0f;
             else if(y > state->screen_height)
@@ -260,7 +260,7 @@ void handle_joystick(gl_t *state, struct input_event *event)
 
 void process_controller_events(gl_t *state, int controller_fd)
 {
-    struct input_event events[5];
+    struct input_event events[10];
     int bytes, i, length;
 
     // Read in events

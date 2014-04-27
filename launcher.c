@@ -42,7 +42,6 @@ int main(int argc, char *argv[])
     {
         // Update user input
         check_user_input(&gl_state);
-
         // Update center of cursor
         set_cursor_vertices(&cursor_state, state.cursor_x, state.cursor_y);
 
