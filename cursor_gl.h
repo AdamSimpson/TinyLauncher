@@ -22,19 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef IMAGE_GL_H
-#define IMAGE_GL_H
+#ifndef CURSOR_GL_H
+#define CURSOR_GL_H
 
 #include "egl_utils.h"
 #include "stdbool.h"
 
-typedef struct image_t {
+typedef struct cursor_t {
     gl_t *gl_state;
 
     GLuint program;
 
-    // Image file name
-    char file_name[50];
+    char file_name[40];
 
     // Program locations
     GLint position_location;
@@ -50,20 +49,19 @@ typedef struct image_t {
     // Element buffer
     GLuint ebo;
 
-    // Position of lower left corner of image
-    int lower_left_x;
-    int lower_left_y;
+    // Position of cursor
+    int center_x;
+    int center_y;
 
-    int image_width;
-    int image_height;
-} image_t;
+    int cursor_width;
+    int cursor_height;
+} cursor_t;
 
-void init_image(image_t *state, gl_t *gl_state, char *file_name, int lower_left_x, int lower_left_y, int image_width, int image_height);
-void create_image_program(image_t *state);
-void create_image_buffers(image_t *state);
-void create_image_vertices(image_t *state);
-void create_image_texture(image_t *state);
-void draw_image(image_t *state);
-bool inside_image(image_t *state, int x, int y);
+void init_cursor(cursor_t *state, gl_t *gl_state, char *file_name, int cursor_width, int cursor_height);
+void create_cursor_program(cursor_t *state);
+void create_cursor_buffers(cursor_t *state);
+void set_cursor_vertices(cursor_t *state, int center_x, int center_y);
+void create_cursor_texture(cursor_t *state);
+void draw_cursor(cursor_t *state);
 
 #endif
