@@ -63,7 +63,7 @@ void compile_shader(GLuint shader, const char *file_name)
     struct stat statbuf;
     stat(file_name, &statbuf);
     char *shader_source = (char *) malloc(statbuf.st_size + 1);
-    fread(shader_source, statbuf.st_size, 1, fh);
+    int err = fread(shader_source, statbuf.st_size, 1, fh);
     shader_source[statbuf.st_size] = '\0';
 
     // Compile shader
@@ -76,3 +76,27 @@ void compile_shader(GLuint shader, const char *file_name)
     free(shader_source);
 }
 
+////////////////////////////////////////////////
+// Utility Functions
+////////////////////////////////////////////////
+float min(float a, float b){
+    float min = a;
+    min = b < min ? b : min;
+    return min;
+}
+
+float max(float a, float b){
+    float max = a;
+    max = b > max ? b : max;
+    return max;
+}
+
+int sgn(float x) {
+    int val = 0;
+    if (x < 0.0)
+        val = -1;
+    else if (x > 0.0)
+        val = 1;
+
+    return val;
+}

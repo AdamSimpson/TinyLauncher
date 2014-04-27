@@ -6,7 +6,7 @@ CFLAGS= -DRASPI -mfloat-abi=hard -mfpu=vfp -O3 -lm -ffast-math
 
 all:
 	mkdir -p bin
-	$(CC) $(CFLAGS) $(INCLUDES) $(LDFLAGS) ogl_utils.c egl_utils.c lodepng.c background_gl.c font_gl.c renderer.c geometry.c -o bin/launcher.out
+	$(CC) $(CFLAGS) $(INCLUDES) $(LDFLAGS) ogl_utils.c egl_utils.c lodepng.c image_gl.c font_gl.c launcher.c -o bin/launcher.out
 clean:
 	rm -f ./bin/sph.out
 	rm -f ./*.o

@@ -22,21 +22,47 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef OGL_UTILS_H
-#define OGL_UTILS_H
+#ifndef IMAGE_GL_H
+#define IMAGE_GL_H
 
-#ifdef GLFW
-  #include "glfw_utils.h"
-#else
-  #include "egl_utils.h"
-#endif
+#include "egl_utils.h"
+#include "stdbool.h"
 
-inline void check();
-void showlog(GLint shader);
-void show_program_log(GLuint program);
-void compile_shader(GLuint shader, const char *file_name);
-float min(float a, float b);
-float max(float a, float b);
-int sgn(float x);
+typedef struct image_t {
+    GLuint program;
+
+    // Program locations
+    GLint position_location;
+    GLint tex_coord_location;
+    GLint tex_location;
+
+    // Uniforms
+    GLuint tex_uniform;
+
+    // Vertex buffer
+    GLuint vbo;
+
+    // Element buffer
+    GLuint ebo;
+
+    // Pixel dimensions
+    int screen_width;
+    int screen_height;
+
+    // Position of lower left corner of image
+    int lower_left_x;
+    int lower_left_y;
+
+    int image_width;
+    int image_height;
+} image_t;
+
+void init_image(image_t *state, int screen_width, int screen_height, int lower_left_x, int lower_left_y, int image_width, int image_height);
+void create_image_program(image_t *state);
+void create_image_buffers(image_t *state);
+void create_image_vertices(image_t *state);
+void create_image_texture(image_t *state);
+void draw_image(image_t *state);
+bool inside_image(image_t *state, int x, int y);
 
 #endif
