@@ -207,6 +207,9 @@ void handle_key(gl_t *state, struct input_event *event)
     {
         switch(event->code)
         {
+            case KEY_A:
+                launch_selected_program(launcher_state);
+                break;
             default:
                 break;
         }

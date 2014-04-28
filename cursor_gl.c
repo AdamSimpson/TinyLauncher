@@ -177,7 +177,7 @@ void init_cursor(cursor_t *state, gl_t *gl_state, char *file_name, int cursor_wi
     create_cursor_texture(state);
 
     // Set verticies
-    set_cursor_position(state, 0.0, 0.0);
+    set_cursor_position(state, 1920/2, 1080/2);
 }
 
 void draw_cursor(cursor_t *state)
