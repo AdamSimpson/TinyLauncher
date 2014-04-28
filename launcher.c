@@ -24,10 +24,10 @@ int main(int argc, char *argv[])
     int lower_left_y = gl_state.screen_height/2 - image_height/2;
     int lower_left_x = 250;
     image_t mandelbrot_state;
-    init_image(&mandelbrot_state, &gl_state, "TinyLauncher/mandelbrot.png", lower_left_x, lower_left_y, image_width, image_height);
+    init_image(&mandelbrot_state, &gl_state, "TinyLauncher/mandelbrot.png", "TinyLauncher/mandelbrot-selected.png", lower_left_x, lower_left_y, image_width, image_height);
     lower_left_x = gl_state.screen_width - image_width - 250;
     image_t sph_state;
-    init_image(&sph_state, &gl_state, "TinyLauncher/sph.png", lower_left_x, lower_left_y, image_width, image_height);
+    init_image(&sph_state, &gl_state, "TinyLauncher/sph.png", "TinyLauncher/sph-selected.png", lower_left_x, lower_left_y, image_width, image_height);
 
     // Initialize cursor
     cursor_t cursor_state;
@@ -38,12 +38,16 @@ int main(int argc, char *argv[])
     // Set background color
     glClearColor(1.0, 1.0, 1.0, 1.0);
 
+    mandelbrot_state.selected = true;
+
     while(1)
     {
         // Update user input
         check_user_input(&gl_state);
         // Update center of cursor
         set_cursor_vertices(&cursor_state, state.cursor_x, state.cursor_y);
+
+        // Check if anything selected
 
         // Clear background
         glClear(GL_COLOR_BUFFER_BIT);

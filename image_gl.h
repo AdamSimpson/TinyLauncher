@@ -35,6 +35,7 @@ typedef struct image_t {
 
     // Image file name
     char file_name[50];
+    char selected_file_name[50];
 
     // Program locations
     GLint position_location;
@@ -43,6 +44,7 @@ typedef struct image_t {
 
     // Uniforms
     GLuint tex_uniform;
+    GLuint tex_selected_uniform;
 
     // Vertex buffer
     GLuint vbo;
@@ -56,9 +58,12 @@ typedef struct image_t {
 
     int image_width;
     int image_height;
+
+    // Determine which image to use
+    bool selected;
 } image_t;
 
-void init_image(image_t *state, gl_t *gl_state, char *file_name, int lower_left_x, int lower_left_y, int image_width, int image_height);
+void init_image(image_t *state, gl_t *gl_state, char *file_name, char *selected_file_name, int lower_left_x, int lower_left_y, int image_width, int image_height);
 void create_image_program(image_t *state);
 void create_image_buffers(image_t *state);
 void create_image_vertices(image_t *state);

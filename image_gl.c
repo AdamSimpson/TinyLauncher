@@ -147,16 +147,50 @@ void create_image_texture(image_t *state)
 
     // Unbind texture
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    error = lodepng_decode32_file(&image, &width, &height, state->selected_file_name);
+    if(error) printf("error %u: %s\n", error, lodepng_error_text(error));
+
+    printf("loaded image: %dx%d\n", width, height);
+
+    // Generate texture
+    glGenTextures(1, &state->tex_selected_uniform);
+
+    // Set texture unit 0 and bind texture
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, state->tex_selected_uniform);
+
+    // Buffer texture
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
+    // Set texture parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Create Mipmap
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Release image host memory
+    free(image);
+
+    // Unbind texture
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 
-void init_image(image_t *state, gl_t *gl_state, char *file_name, int lower_left_x, int lower_left_y, int image_width, int image_height)
+void init_image(image_t *state, gl_t *gl_state, char *file_name, char *selected_file_name, int lower_left_x, int lower_left_y, int image_width, int image_height)
 {
     // Set GL state
     state->gl_state = gl_state;
 
+    // Set selected to false
+    state->selected = false;
+
     // Set filename
     strcpy(state->file_name, file_name);
+    strcpy(state->selected_file_name, selected_file_name);
 
     // Set lower left image pixel position
     state->lower_left_x = lower_left_x;
@@ -201,7 +235,10 @@ void draw_image(image_t *state)
 
     // Setup texture
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, state->tex_uniform);
+    if(state->selected)
+        glBindTexture(GL_TEXTURE_2D, state->tex_selected_uniform);
+    else
+        glBindTexture(GL_TEXTURE_2D, state->tex_uniform);
     glUniform1i(state->tex_location, 0);
 
     // Draw image
